@@ -1,0 +1,20 @@
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003" 
+	DefaultTargets="Build" ToolsVersion="4.0">
+
+	<PropertyGroup>
+		<CheckoutDir>F:\TeamCityCheckoutDir</CheckoutDir>
+		<OutputDir>F:\Output</OutputDir>
+		<GraphvizPath>"C:\Program Files\Graphviz2.34\bin\dot.exe"</GraphvizPath>
+	</PropertyGroup>
+	
+	<UsingTask TaskName="GetProjectsDependencies.BuildDependencies"  
+		AssemblyFile="tasks\bin\debug\GetProjectsDependencies.dll"/>
+	<UsingTask TaskName="GetProjectsDependencies.DrawDependencies"  
+		AssemblyFile="tasks\bin\debug\GetProjectsDependencies.dll"/>
+		
+	<Target Name="Build">
+		<BuildDependencies InputFolder="$(CheckoutDir)" OutputFile="$(OutputDir)\dependencies.xml" />
+		<DrawDependencies InputFile="$(OutputDir)\dependencies.xml" OutputFile="$(OutputDir)\dependencies.gv" />
+		<Exec Command="$(GraphvizPath) -Tpng $(OutputDir)\dependencies.gv -o $(OutputDir)\dependencies.png" />
+	</Target>
+</Project>
